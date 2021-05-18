@@ -68,7 +68,7 @@
                                 </prototypes>
                             </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="98B-UK-Tm7">
-                                <rect key="frame" x="0.0" y="117" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" id="Kgp-0Z-HZq">
@@ -136,7 +136,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uKP-lA-WfX">
-                                                        <rect key="frame" x="0.0" y="107" width="374" height="65"/>
+                                                        <rect key="frame" x="0.0" y="107" width="374" height="65.5"/>
                                                         <color key="backgroundColor" systemColor="linkColor"/>
                                                         <color key="tintColor" systemColor="systemBackgroundColor"/>
                                                         <state key="normal" title="B"/>
@@ -145,7 +145,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dai-oW-r0W">
-                                                        <rect key="frame" x="0.0" y="213" width="374" height="66"/>
+                                                        <rect key="frame" x="0.0" y="213.5" width="374" height="66"/>
                                                         <color key="backgroundColor" systemColor="linkColor"/>
                                                         <color key="tintColor" systemColor="systemBackgroundColor"/>
                                                         <state key="normal" title="C"/>
@@ -154,7 +154,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jGn-L6-ZWs">
-                                                        <rect key="frame" x="0.0" y="320" width="374" height="66"/>
+                                                        <rect key="frame" x="0.0" y="320.5" width="374" height="65.5"/>
                                                         <color key="backgroundColor" systemColor="linkColor"/>
                                                         <color key="tintColor" systemColor="systemBackgroundColor"/>
                                                         <state key="normal" title="D"/>

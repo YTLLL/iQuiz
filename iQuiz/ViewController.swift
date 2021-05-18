@@ -8,17 +8,13 @@
 import UIKit
 
 class Quiz {
-    var title : String
-    var description : String
     var question: String
     var optionA: String
     var optionB: String
     var optionC: String
     var optionD: String
     var correctAnswer: Int
-    init(title tl : String, description des : String, questionText: String, choiceA: String, choiceB: String, choiceC: String, choiceD: String, answer: Int) {
-        title = tl
-        description = des
+    init(questionText: String, choiceA: String, choiceB: String, choiceC: String, choiceD: String, answer: Int) {
         question = questionText
         optionA = choiceA
         optionB = choiceB
@@ -28,34 +24,111 @@ class Quiz {
     }
 }
 
+class QuizType {
+    var title : String
+    var description : String
+    var quiz : [Quiz]
+    init(title tl : String, description des : String, q : [Quiz]) {
+        title = tl
+        description = des
+        quiz = q
+    }
+}
+
+
 class QuizRepository {
-    let url = URL(string: "http://tednewardsandbox.site44.com/questions.json")
-    static let task = URLSession.shared.dataTask(with: URL(string: "http://tednewardsandbox.site44.com/questions.json")!) { data, response, error in
-        print("We got data back!")
-        print((response as! HTTPURLResponse).statusCode)
-        
-        print(data)
-        do {
-            let questions = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-            print((questions as! Array)[0])
+    let urlString = "https://tednewardsandbox.site44.com/questions.json"
+    var quizzes : [QuizType] = []
+    //task.resume()
+    func readLocalFile(forName name: String) -> Data? {
+        let fm = FileManager.default
+        let urls = fm.urls(for: .documentDirectory, in: .userDomainMask)
+        if let url = urls.first {var fileURL = url.appendingPathComponent(name)
+                    fileURL = fileURL.appendingPathExtension("json")
+            do {
+                let data = try Data(contentsOf: fileURL)
+                return data
+            } catch {
+                print("Not Local File Find")
+            }
         }
-        catch { print("Error") }
+        return nil
+    }
+        
+
+    func parse(jsonData: Data) -> [QuizType] {
+        
+        do {
+            let questions = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments)
+            let y = questions as! Array<Dictionary<String, Any>>
+            print(y.count)
+            for i in y {
+                let desc = i["desc"] as! String
+                let tl = i["title"] as! String
+                let question_dict = i["questions"] as! Array<Dictionary<String, Any>>
+                var quiz : [Quiz] = []
+                for j in question_dict {
+                    let question = j["text"] as! String
+                    let answer = Int(j["answer"] as! String) ?? 0
+                    let option = j["answers"] as! Array<String>
+                    quiz.append(Quiz(questionText: question, choiceA: option[0], choiceB: option[1], choiceC: option[2], choiceD: option[3], answer: answer))
+                }
+                quizzes.append(QuizType(title: tl, description: desc, q : quiz))
+            }
+            return quizzes
+        } catch { print("Error") }
+        return quizzes
+
+    }
+
+    func loadJson(fromURLString urlString: String,
+                          completion: @escaping (Result<Data, Error>) -> Void) {
+        if let url = URL(string: urlString) {
+            let urlSession = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    completion(.failure(error))
+                }
+                if let data = data {
+                    completion(.success(data))
+                }
+            }
+            
+            urlSession.resume()
+        }
     }
     
-    //task.resume()
-    
-    static let quizzes = [
-        Quiz(title: "Science!", description: "Because SCIENCE!"),
-        Quiz(title: "Marvel Super Heroes", description: "How much do you know about heroes?"),
-        Quiz(title: "Science", description: "Test science topic")
-    ]
+    func save(jsonString : Data) {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        if let documentDirectory = documentDirectory.first {
+            var pathWithFileName = documentDirectory.appendingPathComponent("myJsonData")
+            pathWithFileName = pathWithFileName.appendingPathExtension("json")
+            do {
+                try jsonString.write(to: pathWithFileName)
+            } catch {
+                print("Unable to save file")
+            }
+        }
+    }
     
     static let instances = QuizRepository()
     
     private init() {}
     
-    func allQuizzes() -> [Quiz] {
-        return QuizRepository.quizzes;
+    func allQuizzes() -> [QuizType] {
+        
+        loadJson(fromURLString: urlString) { (result) in
+                switch result {
+                case .success(let data):
+                    self.save(jsonString: data)
+                case .failure(let error):
+                    print(error)
+                }
+        }
+        
+        let local = self.readLocalFile(forName: "myJsonData")
+        quizzes = parse(jsonData: local!)
+        //quizzes = parse(jsonData: local!)
+        return quizzes;
     }
     
     
@@ -64,17 +137,17 @@ class QuizRepository {
 
 class NamesSource : NSObject, UITableViewDataSource {
     static let CELL_STYLE = "BasicStyle"
+    let quiz = QuizRepository.instances.allQuizzes()
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return QuizRepository.instances.allQuizzes().count
+        return quiz.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NamesSource.CELL_STYLE, for:indexPath)
         
-        let quiz = QuizRepository.instances.allQuizzes()[indexPath.row]
-        cell.textLabel?.text = quiz.title
-        cell.detailTextLabel?.text = quiz.description
-        
+        let rows = quiz[indexPath.row]
+        cell.textLabel?.text = rows.title
+        cell.detailTextLabel?.text = rows.description
         return cell
     }
     //let names = ["Mathematics", "Marvel Super Heroes", "Science"]
@@ -124,14 +197,14 @@ class ViewController: UIViewController, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt: IndexPath) {
         NSLog("User selected \(didSelectRowAt)")
-        tableView.deselectRow(at: didSelectRowAt, animated: true)
         performSegue(withIdentifier: "goquestion", sender: self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let quizData = QuizRepository.instances.allQuizzes()
             if let destination = segue.destination as? QuizViewController {
-                destination.product = productArray[(tblAppleProducts.indexPathForSelectedRow?.row)!]
-                tblAppleProducts.deselectRow(at: tblAppleProducts.indexPathForSelectedRow!, animated: true)
+                destination.data = quizData[(tableView.indexPathForSelectedRow?.row)!].quiz
+                tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
         }
     }
     
