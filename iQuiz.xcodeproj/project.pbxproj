@@ -17,6 +17,8 @@
 		E15555B226445B9C004359E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E15555B026445B9C004359E0 /* LaunchScreen.storyboard */; };
 		E15555BD26445B9C004359E0 /* iQuizTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15555BC26445B9C004359E0 /* iQuizTests.swift */; };
 		E15555C826445B9C004359E0 /* iQuizUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15555C726445B9C004359E0 /* iQuizUITests.swift */; };
+		E1E07E5826544E9100E8663A /* AnswerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E07E5726544E9100E8663A /* AnswerViewController.swift */; };
+		E1E07E5A265463CC00E8663A /* FinishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E07E59265463CC00E8663A /* FinishViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		E15555C326445B9C004359E0 /* iQuizUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iQuizUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E15555C726445B9C004359E0 /* iQuizUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iQuizUITests.swift; sourceTree = "<group>"; };
 		E15555C926445B9C004359E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1E07E5726544E9100E8663A /* AnswerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerViewController.swift; sourceTree = "<group>"; };
+		E1E07E59265463CC00E8663A /* FinishViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +112,9 @@
 				E15555A926445B9B004359E0 /* ViewController.swift */,
 				E13AC6B82653D38C0016DF93 /* testViewController.swift */,
 				E13225E52652BECC00E2F1A7 /* QuizViewController.swift */,
+				E1E07E59265463CC00E8663A /* FinishViewController.swift */,
 				E15555AB26445B9B004359E0 /* Main.storyboard */,
+				E1E07E5726544E9100E8663A /* AnswerViewController.swift */,
 				E15555AE26445B9C004359E0 /* Assets.xcassets */,
 				E15555B026445B9C004359E0 /* LaunchScreen.storyboard */,
 				E15555B326445B9C004359E0 /* Info.plist */,
@@ -264,8 +270,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1E07E5826544E9100E8663A /* AnswerViewController.swift in Sources */,
 				E15555AA26445B9B004359E0 /* ViewController.swift in Sources */,
 				E15555A626445B9B004359E0 /* AppDelegate.swift in Sources */,
+				E1E07E5A265463CC00E8663A /* FinishViewController.swift in Sources */,
 				E15555A826445B9B004359E0 /* SceneDelegate.swift in Sources */,
 				E13AC6B92653D38C0016DF93 /* testViewController.swift in Sources */,
 				E13225E62652BECC00E2F1A7 /* QuizViewController.swift in Sources */,

@@ -17,6 +17,12 @@ class QuizViewController: UIViewController {
     @IBOutlet weak var optionC: UIButton!
     @IBOutlet weak var optionD: UIButton!
     
+    var qnumber : Int = 0
+    var count : Int = 1
+    var correct : Bool = false
+    var choiceText : String = ""
+    var currentQ : String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateQuestion()
@@ -24,18 +30,47 @@ class QuizViewController: UIViewController {
     }
     
     func updateQuestion(){
-        quesiton.text = data![0].question
-        optionA.setTitle(data![0].optionA, for: UIControl.State.normal)
-        optionB.setTitle(data![0].optionB, for: UIControl.State.normal)
-        optionC.setTitle(data![0].optionC, for: UIControl.State.normal)
-        optionD.setTitle(data![0].optionD, for: UIControl.State.normal)
- 
-            
-        }
-    
-    @IBAction func answerPressed(_ sender: UIButton) {
+        quesiton.text = data![qnumber].question
+        optionA.setTitle(data![qnumber].optionA, for: UIControl.State.normal)
+        optionB.setTitle(data![qnumber].optionB, for: UIControl.State.normal)
+        optionC.setTitle(data![qnumber].optionC, for: UIControl.State.normal)
+        optionD.setTitle(data![qnumber].optionD, for: UIControl.State.normal)
     }
     
+    
+    @IBAction func answerPressed(_ sender: UIButton) {
+        currentQ = data![qnumber].question
+        if data![qnumber].correctAnswer == 1 {
+            choiceText = data![qnumber].optionA
+        } else if data![qnumber].correctAnswer == 2 {
+            choiceText = data![qnumber].optionB
+        } else if data![qnumber].correctAnswer == 3 {
+            choiceText = data![qnumber].optionC
+        } else {
+            choiceText = data![qnumber].optionD
+        }
+        if sender.tag == data![qnumber].correctAnswer {
+            correct = true
+        }else{
+            correct = false
+        }
+        
+        if count < (data!.count){
+            count += 1
+            qnumber += 1
+        }
+        updateQuestion()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if let destination = segue.destination as? AnswerViewController {
+                destination.choice = choiceText
+                destination.correct = correct
+                destination.questionText = currentQ
+                destination.currentNum = count
+                destination.finishNum = data!.count
+        }
+    }
     /*
     // MARK: - Navigation
 

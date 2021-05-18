@@ -61,7 +61,6 @@ class QuizRepository {
         do {
             let questions = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments)
             let y = questions as! Array<Dictionary<String, Any>>
-            print(y.count)
             for i in y {
                 let desc = i["desc"] as! String
                 let tl = i["title"] as! String
@@ -191,7 +190,6 @@ class ViewController: UIViewController, UITableViewDelegate {
         tableView.dataSource = data
         tableView.delegate = self
         settingButton.addTarget(self, action: #selector(triggerAlert), for: UIControl.Event.touchUpInside)
-        
        
     }
     
@@ -204,6 +202,7 @@ class ViewController: UIViewController, UITableViewDelegate {
         let quizData = QuizRepository.instances.allQuizzes()
             if let destination = segue.destination as? QuizViewController {
                 destination.data = quizData[(tableView.indexPathForSelectedRow?.row)!].quiz
+                destination.qnumber = 0
                 tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
         }
     }
