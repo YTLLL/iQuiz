@@ -22,6 +22,7 @@ class QuizViewController: UIViewController {
     var correct : Bool = false
     var choiceText : String = ""
     var currentQ : String = ""
+    var correctNum : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,12 +52,15 @@ class QuizViewController: UIViewController {
         }
         if sender.tag == data![qnumber].correctAnswer {
             correct = true
+            correctNum += 1
         }else{
             correct = false
         }
         
-        if count < (data!.count){
+        if count <= (data!.count){
             count += 1
+        }
+        if qnumber < (data!.count - 1) {
             qnumber += 1
         }
         updateQuestion()
@@ -69,6 +73,7 @@ class QuizViewController: UIViewController {
                 destination.questionText = currentQ
                 destination.currentNum = count
                 destination.finishNum = data!.count
+                destination.correctNum = correctNum
         }
     }
     /*

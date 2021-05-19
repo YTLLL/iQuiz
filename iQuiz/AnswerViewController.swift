@@ -35,16 +35,16 @@ class AnswerViewController: UIViewController {
         //print(currentNum)
         //print(finishNum)
         print(currentNum)
-        if currentNum < finishNum {
+        if currentNum <= finishNum {
             let _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if currentNum < finishNum {
-                return false
+        if currentNum > finishNum {
+                return true
         }
-        return true
+        return false
     }
     
     
@@ -59,6 +59,13 @@ class AnswerViewController: UIViewController {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if let destination = segue.destination as? FinishViewController {
+                destination.total = finishNum
+                destination.correct = correctNum
+                
+        }
+    }
     
     /*
     // MARK: - Navigation

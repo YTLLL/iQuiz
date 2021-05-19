@@ -294,6 +294,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="ljf-oJ-uEw"/>
                     <connections>
+                        <outlet property="backBnt" destination="ljf-oJ-uEw" id="RgD-Xx-EWd"/>
                         <outlet property="desctext" destination="20R-Gt-8wc" id="YR3-20-Dpb"/>
                         <outlet property="score" destination="eCQ-EI-3jc" id="RN0-5I-aSr"/>
                     </connections>
