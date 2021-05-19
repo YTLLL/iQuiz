@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SystemConfiguration
 
 class Quiz {
     var question: String
@@ -161,21 +162,66 @@ class NameSelector : NSObject, UITableViewDelegate {
     /*fromViewController.performSegue(withIdentifier: "goquestion", sender: fromViewController)*/
 }
 
+public class Reachability {
+
+    class func isConnectedToNetwork() -> Bool {
+
+        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+
+        var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
+        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+            return false
+        }
+
+        /* Only Working for WIFI
+        let isReachable = flags == .reachable
+        let needsConnection = flags == .connectionRequired
+
+        return isReachable && !needsConnection
+        */
+
+        // Working for Cellular and WIFI
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        let ret = (isReachable && !needsConnection)
+
+        return ret
+
+    }
+}
+
 
 class ViewController: UIViewController, UITableViewDelegate {
     
+    var url = "http://tednewardsandbox.site44.com/questions.json"
     
     @IBOutlet weak var settingButton: UIButton!
     
     
     @objc func triggerAlert(sender: UIButton) {
-        let alert = UIAlertController(title: "Settings", message: "Settings go here", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
-        NSLog("The \"OK\" alert occured.")
+        let alert = UIAlertController(title: "Settings", message: url, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Check Now", comment: "Default action"), style: .default, handler: { _ in
+            QuizRepository.instances.loadJson(fromURLString: self.url) { (result) in
+                    switch result {
+                    case .success(let data):
+                        QuizRepository.instances.save(jsonString: data)
+                    case .failure(let error):
+                        print(error)
+                    }
+            }
         }))
         self.present(alert, animated: true, completion: nil)
     }
     
+
     
     let data = NamesSource()
     let actor = NameSelector()
@@ -190,7 +236,17 @@ class ViewController: UIViewController, UITableViewDelegate {
         tableView.dataSource = data
         tableView.delegate = self
         settingButton.addTarget(self, action: #selector(triggerAlert), for: UIControl.Event.touchUpInside)
-       
+        
+        if Reachability.isConnectedToNetwork(){
+            print("Internet Connection Available!")
+        }else{
+            let alert = UIAlertController(title: "Network", message: "Your Network is Currently Unavailable", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+            NSLog("The \"OK\" alert occured.")
+            }))
+            self.present(alert, animated: true, completion: nil)
+            print("Internet Connection not Available!")
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt: IndexPath) {
