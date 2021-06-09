@@ -120,13 +120,15 @@ class QuizRepository {
                 switch result {
                 case .success(let data):
                     self.save(jsonString: data)
+                    
                 case .failure(let error):
                     print(error)
                 }
         }
-        
+     
         let local = self.readLocalFile(forName: "myJsonData")
-        quizzes = parse(jsonData: local!)
+        let backup = self.readLocalFile(forName: "backup")
+        quizzes = parse(jsonData: (local ?? backup)!)
         //quizzes = parse(jsonData: local!)
         return quizzes;
     }
